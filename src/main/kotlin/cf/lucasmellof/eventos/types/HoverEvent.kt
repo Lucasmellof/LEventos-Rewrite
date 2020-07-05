@@ -43,6 +43,6 @@ class HoverEvent : EventComponents {
     }
 
     private fun loadToken(): String {
-        return ('a'..'z').shuffled().take(7).joinToString { "" }
+        return (1..7).map { ('a'..'z').toList().toTypedArray().random() }.joinToString("")
     }
 }

@@ -1,9 +1,8 @@
-package cf.lucasmellof.huddout.utils
+package cf.lucasmellof.eventos.utils
 
 /* 
  * @author Lucasmellof, Lucas de Mello Freitas created on 24/05/2020
  */
-import cf.lucasmellof.eventos.utils.Utf8YamlConfiguration
 import org.bukkit.*
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
@@ -387,7 +386,8 @@ class ConfigAPI {
     }
 
     fun reload() {
-        config = YamlConfiguration.loadConfiguration(theFile) as FileConfiguration
+        config = Utf8YamlConfiguration()
+        config.load(theFile)
     }
 
     companion object {

@@ -12,7 +12,7 @@ class EventosReloadCommand : CommandExecutor {
     override fun onCommand(p0: CommandSender, p1: Command, p2: String, p3: Array<out String>): Boolean {
         if (p0.hasPermission("leventos.eventosreload")) {
             p0.sendMessage("§a§l ! §fRecarregando config.")
-            ConfigManager.initialize()
+            ConfigManager.reload()
         } else return true
         return false
     }

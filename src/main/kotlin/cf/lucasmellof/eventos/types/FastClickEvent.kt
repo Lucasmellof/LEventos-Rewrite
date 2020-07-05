@@ -44,11 +44,11 @@ class FastClickEvent : EventComponents {
                 TextComponent("§aClique aqui para ganhar o evento clique rápido.")
             )
         )
-        cmp.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND, "/chateventos $token")
+        cmp.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ev $token")
         return cmp
     }
 
     private fun loadToken(): String {
-        return ('a'..'z').shuffled().take(7).joinToString { "" }
+        return (1..7).map { ('a'..'z').toList().toTypedArray().random() }.joinToString("")
     }
 }

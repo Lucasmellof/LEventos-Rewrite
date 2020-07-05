@@ -17,19 +17,20 @@ import org.bukkit.scheduler.BukkitRunnable
  */
 class LEventos : JavaPlugin() {
     companion object {
-        val INSTANCE: LEventos = getPlugin(LEventos::class.java)
+        lateinit var INSTANCE: LEventos
     }
 
     var runningEvent: EventComponents? = null
     override fun onEnable() {
+        INSTANCE = this
         Bukkit.getConsoleSender().sendMessage("§a ! §fCarregando o plugin de eventos")
         Bukkit.getConsoleSender().sendMessage("§a ! §fPlugin criado por Lucasmellof")
         Bukkit.getConsoleSender().sendMessage("§a ! §fhttps://github.com/Lucasmellof")
         Bukkit.getConsoleSender().sendMessage("§a ! §fDiscord: carmello#0760")
-        ConfigManager.initialize()
+        ConfigManager.initialize(this)
         Vault.setupEconomy()
         getCommand("ev").executor = EventoCommand()
-        getCommand("reloadevento").executor = EventosReloadCommand()
+        getCommand("eventosreload").executor = EventosReloadCommand()
         eventScheduler()
     }
 
@@ -58,6 +59,6 @@ class LEventos : JavaPlugin() {
                     }
                 }
             }
-        }.runTaskTimer(this, 0, ConfigManager.autoStartTime)
+        }.runTaskTimer(this, 0, ConfigManager.autoStartTime * 20)
     }
 }
