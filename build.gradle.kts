@@ -23,5 +23,16 @@ bukkit {
     main = "cf.lucasmellof.eventos.LEventos"
     author = "Lucasmellof"
     name = "LEventos"
+    version = "1.0"
     softDepend = listOf("Vault")
+    commands.create("ev") {
+        description = "Comando de eventos!"
+        aliases = listOf("chatevento", "cevento", "eventos")
+        usage = "Use o comando!"
+    }
+    commands.create("eventosreload") {
+        description = "Comando de eventos!"
+        permission = "leventos.eventosreload"
+        usage = "Use o comando!"
+    }
 }
