@@ -22,7 +22,7 @@ class EventoCommand : CommandExecutor {
         var event: EventComponents? = LEventos.INSTANCE.runningEvent
         if (sender is Player) {
             val p: Player = sender
-            if (args.isNullOrEmpty()) {
+            if (args.isEmpty()) {
                 when (event) {
                     is MathEvent -> {
                         p.sendMessage("§e ! §fUse §e/ev <resposta>.")
@@ -37,6 +37,7 @@ class EventoCommand : CommandExecutor {
                         p.sendMessage("§cNenhum evento está ocorrendo no momento.")
                     }
                 }
+                return true
             }
             if (event == null) {
                 p.sendMessage("§cNenhum evento está ocorrendo no momento.")
