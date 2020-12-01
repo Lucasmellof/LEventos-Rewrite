@@ -14,20 +14,30 @@ import org.bukkit.entity.Player
  */
 class FastClickEvent : EventComponents {
     var token = ""
+
+    override val name: String = "fastclick"
+
+    override val needReply: Boolean = false
+    override var started: Long = 0L
+
     override fun onStart() {
+        started = System.currentTimeMillis()
         token = loadToken()
         Bukkit.broadcastMessage(" ")
-        Bukkit.broadcastMessage("§6Evento §fescreva mais rapido§6 foi iniciado.")
-        Bukkit.broadcastMessage("§6Utilize §f/ev <resposta>§6 para vencer.")
+        Bukkit.broadcastMessage("§6Evento §fclique mais rapido§6 foi iniciado.")
+        Bukkit.broadcastMessage("§6Clique no botão para vencer.")
         Bukkit.getOnlinePlayers().forEach { it.spigot().sendMessage(click()) }
         Bukkit.broadcastMessage(" ")
+        started = System.currentTimeMillis()
     }
 
     override fun onFinish(p: Player) {
         Bukkit.broadcastMessage(" ")
         Bukkit.broadcastMessage("§6Evento §fescreva mais rapido§6 ocorrido.")
         Bukkit.broadcastMessage("§6O grande vencedor foi: §f" + p.name)
+        showTime()
         Bukkit.broadcastMessage(" ")
+        finalize(p)
     }
 
     override fun onPlayer(p: Player, args: String?): Boolean {
@@ -44,7 +54,7 @@ class FastClickEvent : EventComponents {
                 TextComponent("§aClique aqui para ganhar o evento clique rápido.")
             )
         )
-        cmp.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ev $token")
+        cmp.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND, token)
         return cmp
     }
 

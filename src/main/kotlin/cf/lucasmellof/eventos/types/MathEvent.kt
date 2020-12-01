@@ -11,6 +11,11 @@ import java.util.*
 class MathEvent : EventComponents {
     private var result = 0
     private val random = Random()
+    override val name: String = "math"
+
+    override val needReply: Boolean = true
+    override var started: Long = 0L
+
     override fun onStart() {
         val one = random.nextInt(20391)
         val two = random.nextInt(20391)
@@ -18,7 +23,7 @@ class MathEvent : EventComponents {
 
         Bukkit.broadcastMessage(" ")
         Bukkit.broadcastMessage("§6Evento §fmatemática§6 iniciado.")
-        Bukkit.broadcastMessage("§6Utilize §f/ev <resposta da conta>§6 para vencer.")
+        Bukkit.broadcastMessage("§6Digite a resposta para vencer.")
         Bukkit.broadcastMessage("§6Conta: §f$one §6+ §f$two")
         Bukkit.broadcastMessage(" ")
     }
@@ -29,7 +34,9 @@ class MathEvent : EventComponents {
         Bukkit.broadcastMessage(" ")
         Bukkit.broadcastMessage("§6Evento §fmatemática§6 concluido.")
         Bukkit.broadcastMessage("§6O grande vencedor foi: §f" + p.name)
+        showTime()
         Bukkit.broadcastMessage(" ")
+        finalize(p)
     }
 
     override fun onPlayer(p: Player, args: String?): Boolean {

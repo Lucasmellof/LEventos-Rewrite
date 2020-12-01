@@ -13,20 +13,29 @@ import org.bukkit.entity.Player
  */
 class HoverEvent : EventComponents {
     var token = ""
+
+    override val name: String = "hover"
+
+    override val needReply: Boolean = true
+    override var started: Long = 0L
+
     override fun onStart() {
         token = loadToken()
         Bukkit.broadcastMessage(" ")
         Bukkit.broadcastMessage("§6Evento §fescreva mais rapido§6 foi iniciado.")
-        Bukkit.broadcastMessage("§6Utilize §f/ev <resposta>§6 para vencer.")
+        Bukkit.broadcastMessage("§6Digite a resposta para vencer.")
         Bukkit.getOnlinePlayers().forEach { it.spigot().sendMessage(message()) }
         Bukkit.broadcastMessage(" ")
+        started = System.currentTimeMillis()
     }
 
     override fun onFinish(p: Player) {
         Bukkit.broadcastMessage(" ")
         Bukkit.broadcastMessage("§6Evento §fescreva mais rapido§6 ocorrido.")
         Bukkit.broadcastMessage("§6O grande vencedor foi: §f" + p.name)
+        showTime()
         Bukkit.broadcastMessage(" ")
+        finalize(p)
     }
 
     override fun onPlayer(p: Player, args: String?): Boolean {
@@ -43,6 +52,6 @@ class HoverEvent : EventComponents {
     }
 
     private fun loadToken(): String {
-        return (1..7).map { ('a'..'z').toList().toTypedArray().random() }.joinToString("")
+        return (1..7).map { ('a'..'Z').toList().toTypedArray().random() }.joinToString("")
     }
 }
