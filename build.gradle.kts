@@ -12,11 +12,13 @@ version = "2.0"
 
 repositories {
     mavenCentral()
+    maven(url = "https://jitpack.io")
 }
 
 dependencies {
     compileOnly(fileTree(mapOf("dir" to "lib", "include" to listOf("*.jar"))))
-    compileOnly(kotlin("stdlib", KotlinCompilerVersion.VERSION))
+    implementation(kotlin("stdlib", KotlinCompilerVersion.VERSION))
+    implementation("com.github.SaiintBrisson.command-framework:bukkit:1.0.0")
     testImplementation(group = "junit", name = "junit", version = "4.12")
 }
 bukkit {
@@ -25,14 +27,5 @@ bukkit {
     name = "LEventos"
     version = "2.0"
     softDepend = listOf("Vault")
-    commands.create("ev") {
-        description = "Comando de eventos!"
-        aliases = listOf("chatevento", "cevento", "eventos")
-        usage = "Use o comando!"
-    }
-    commands.create("eventosreload") {
-        description = "Comando de eventos!"
-        permission = "leventos.eventosreload"
-        usage = "Use o comando!"
-    }
+    website = "https://lucasmellof.cf"
 }
