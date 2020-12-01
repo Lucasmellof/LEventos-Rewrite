@@ -39,8 +39,6 @@ class LEventos : JavaPlugin() {
         Bukkit.getPluginManager().registerEvents(PlayerListeners(), this)
         ConfigManager.initialize(this)
         Vault.setupEconomy()
-        //getCommand("ev").executor = EventoCommandOLD()
-        //getCommand("eventosreload").executor = EventosReloadCommand()
         //eventScheduler()
 
     }
