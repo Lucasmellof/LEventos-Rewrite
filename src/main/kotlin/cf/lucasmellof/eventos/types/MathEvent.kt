@@ -19,12 +19,10 @@ class MathEvent : EventComponents {
     override fun onStart() {
         val one = random.nextInt(20391)
         val two = random.nextInt(20391)
-        result = one + two
-
         Bukkit.broadcastMessage(" ")
         Bukkit.broadcastMessage("§6Evento §fmatemática§6 iniciado.")
         Bukkit.broadcastMessage("§6Digite a resposta para vencer.")
-        Bukkit.broadcastMessage("§6Conta: §f$one §6+ §f$two")
+        getResult(one, two)
         Bukkit.broadcastMessage(" ")
     }
 
@@ -48,6 +46,27 @@ class MathEvent : EventComponents {
         } else {
             p.sendMessage("§eVocê acertou, parabéns!")
             true
+        }
+    }
+
+    fun getResult(one: Int, two: Int) {
+        when ((1..4).random()) {
+            1 -> {
+                result = one + two
+                Bukkit.broadcastMessage("§6Conta: §f$one §6+ §f$two")
+            }
+            2 -> {
+                result = one - two
+                Bukkit.broadcastMessage("§6Conta: §f$one §6- §f$two")
+            }
+            3 -> {
+                result = one / two
+                Bukkit.broadcastMessage("§6Conta: §f$one §6/ §f$two")
+            }
+            4 -> {
+                result = one * two
+                Bukkit.broadcastMessage("§6Conta: §f$one §6* §f$two")
+            }
         }
     }
 }
