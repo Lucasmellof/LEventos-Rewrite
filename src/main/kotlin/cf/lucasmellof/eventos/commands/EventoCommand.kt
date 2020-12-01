@@ -1,86 +1,82 @@
 package cf.lucasmellof.eventos.commands
 
 import cf.lucasmellof.eventos.LEventos
-import cf.lucasmellof.eventos.components.EventComponents
-import cf.lucasmellof.eventos.config.ConfigManager
-import cf.lucasmellof.eventos.events.PlayerWinEvent
-import cf.lucasmellof.eventos.types.FastClickEvent
-import cf.lucasmellof.eventos.types.HoverEvent
-import cf.lucasmellof.eventos.types.MathEvent
-import cf.lucasmellof.eventos.utils.Vault
-import org.bukkit.Bukkit
-import org.bukkit.command.Command
-import org.bukkit.command.CommandExecutor
-import org.bukkit.command.CommandSender
+import cf.lucasmellof.eventos.utils.Text
+import me.saiintbrisson.minecraft.command.annotation.Command
+import me.saiintbrisson.minecraft.command.command.Context
+import me.saiintbrisson.minecraft.command.target.CommandTarget
 import org.bukkit.entity.Player
 
-/* 
- * @author Lucasmellof, Lucas de Mello Freitas created on 05/07/2020
+
+/*
+ * @author Lucasmellof, Lucas de Mello Freitas created on 01/12/2020
  */
-class EventoCommand : CommandExecutor {
-    override fun onCommand(sender: CommandSender, cmd: Command, label: String?, args: Array<String>): Boolean {
-        var event: EventComponents? = LEventos.INSTANCE.runningEvent
-        if (sender is Player) {
-            val p: Player = sender
-            if (args.isEmpty()) {
-                when (event) {
-                    is MathEvent -> {
-                        p.sendMessage("§e ! §fUse §e/ev <resposta>.")
-                    }
-                    is FastClickEvent -> {
-                        p.sendMessage("§c ! §fSem comandos neste evento.")
-                    }
-                    is HoverEvent -> {
-                        p.sendMessage("§e ! §fUse §e/ev <resposta>.")
-                    }
-                    else -> {
-                        p.sendMessage("§cNenhum evento está ocorrendo no momento.")
-                    }
-                }
-                return true
-            }
-            if (event == null) {
-                p.sendMessage("§cNenhum evento está ocorrendo no momento.")
-                return true
-            }
-            if (args[0].equals("matematica", ignoreCase = true) && p.hasPermission("leventos.eventos")) {
-                if (event != null) {
-                    p.sendMessage("§cJá está ocorrendo um evento.")
-                    return true
-                }
-                event = MathEvent()
-                event.onStart()
-                p.sendMessage("§aVocê iniciou o evento matematica.")
-            } else if (args[0].equals("fastclick", ignoreCase = true) && p.hasPermission("leventos.eventos")) {
-                if (event != null) {
-                    p.sendMessage("§cJá está ocorrendo um evento.")
-                    return true
-                }
-                event = FastClickEvent()
-                event.onStart()
-                p.sendMessage("§aVocê iniciou o evento clique rápido.")
-            } else if (args[0].equals("hover", ignoreCase = true) && p.hasPermission("leventos.eventos")) {
-                if (event != null) {
-                    p.sendMessage("§cJá está ocorrendo um evento.")
-                    return true
-                }
-                event = HoverEvent()
-                event.onStart()
-                p.sendMessage("§aVocê iniciou o evento escreva mais rapido.")
-            } else {
-                if (event.onPlayer(p, args[0])) {
-                    event.onFinish(p)
-                    Bukkit.getPluginManager().callEvent(
-                        PlayerWinEvent(
-                            p,
-                            ConfigManager.prize
-                        )
-                    )
-                    Vault.eco?.depositPlayer(p, ConfigManager.prize)
-                    LEventos.INSTANCE.runningEvent = null
-                }
-            }
+class EventoCommand {
+
+    @Command(
+        name = "eventos",
+        aliases = ["evento", "ev", "leventos", "event"],
+        target = CommandTarget.PLAYER,
+        permission = "leventos.admin"
+    )
+    fun mainCommand(ctx: Context<Player>) {
+        val p = ctx.sender
+        return showHelp(p, ctx.label)
+    }
+
+    @Command(name = "eventos.start", aliases = ["iniciar"], target = CommandTarget.PLAYER)
+    fun startCommand(ctx: Context<Player>, eventName: String) {
+        val p = ctx.sender
+        val event = LEventos.INSTANCE.loadedEvents[eventName]
+        if (event == null) {
+            p.sendMessage("§c ! §fNão encontrei nenhum evento com esse nome.")
+            Text.sendTo(
+                p,
+                Text(
+                    "§f§l[CLIQUE AQUI PARA VER OS EVENTOS DISPONÍVEIS]",
+                    "Mostra os comandos disponíveis"
+                ).setRunCommandActionText("/${ctx.label} list")
+            )
+            return
         }
-        return true
+        LEventos.INSTANCE.runningEvent = event
+        event.onStart()
+        p.sendMessage("§a ! §fVocê iniciou um evento")
+    }
+
+    @Command(name = "eventos.list", target = CommandTarget.PLAYER)
+    fun listCommand(ctx: Context<Player>) {
+        val p = ctx.sender
+        p.sendMessage("§7(§m§l----§3§lLista de Eventos Disponíveis§7§m§l----§7)")
+        for (loadedEvent in LEventos.INSTANCE.loadedEvents) {
+            Text.sendTo(
+                p,
+                Text(
+                    "§f[§c${loadedEvent.value.name.capitalize()}§f]",
+                    "Clique aqui para iniciar o evento"
+                ).setRunCommandActionText("/eventos start ${loadedEvent.value.name}")
+            )
+        }
+    }
+
+    private fun showHelp(p: Player, label: String) {
+        val event = LEventos.INSTANCE.runningEvent
+        if (event != null) {
+            if (event.needReply) {
+                p.sendMessage("§e ! §fDigite no chat a resposta do evento.")
+            } else p.sendMessage("§c ! §fSem comandos neste evento.")
+        } else {
+            p.sendMessage("§cNenhum evento está ocorrendo no momento.")
+        }
+        if (p.hasPermission("leventos.admin")) {
+            p.sendMessage("")
+            Text.sendTo(p, Text("§3§l/§a$label", "mostra esse comando", "/$label <evento>"))
+            Text.sendTo(p, Text("§3§l/§a$label §estart §d<nome do evento>", "Inicia um evento", "/$label start "))
+            Text.sendTo(p, Text("§3§l/§a$label §elist", "Mostra os eventos disponíveis", "/$label list"))
+            Text.sendTo(
+                p,
+                Text("§3§l/§a$label §ereload", "Recarrega todas as configurações do plugin", "/$label reload")
+            )
+        }
     }
 }
