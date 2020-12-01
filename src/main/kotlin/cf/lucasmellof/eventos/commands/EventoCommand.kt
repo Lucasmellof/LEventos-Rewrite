@@ -1,6 +1,7 @@
 package cf.lucasmellof.eventos.commands
 
 import cf.lucasmellof.eventos.LEventos
+import cf.lucasmellof.eventos.config.ConfigManager
 import cf.lucasmellof.eventos.utils.Text
 import me.saiintbrisson.minecraft.command.annotation.Command
 import me.saiintbrisson.minecraft.command.command.Context
@@ -24,10 +25,15 @@ class EventoCommand {
         return showHelp(p, ctx.label)
     }
 
-    @Command(name = "eventos.start", aliases = ["iniciar"], target = CommandTarget.PLAYER)
+    @Command(
+        name = "eventos.start",
+        aliases = ["iniciar"],
+        target = CommandTarget.PLAYER,
+        permission = "leventos.admin"
+    )
     fun startCommand(ctx: Context<Player>, eventName: String) {
         val p = ctx.sender
-        val event = LEventos.INSTANCE.loadedEvents[eventName]
+        val event = LEventos.INSTANCE.loadedEvents[eventName.toLowerCase()]
         if (event == null) {
             p.sendMessage("§c ! §fNão encontrei nenhum evento com esse nome.")
             Text.sendTo(
@@ -44,7 +50,13 @@ class EventoCommand {
         p.sendMessage("§a ! §fVocê iniciou um evento")
     }
 
-    @Command(name = "eventos.list", target = CommandTarget.PLAYER)
+    @Command(name = "eventos.reload", permission = "leventos.admin")
+    fun reloadCommand(ctx: Context<Player>) {
+        ctx.sender.sendMessage("§a§l ! §fRecarregando config.")
+        ConfigManager.reload()
+    }
+
+    @Command(name = "eventos.list", target = CommandTarget.PLAYER, permission = "leventos.admin")
     fun listCommand(ctx: Context<Player>) {
         val p = ctx.sender
         p.sendMessage("§7(§m§l----§3§lLista de Eventos Disponíveis§7§m§l----§7)")
@@ -60,14 +72,6 @@ class EventoCommand {
     }
 
     private fun showHelp(p: Player, label: String) {
-        val event = LEventos.INSTANCE.runningEvent
-        if (event != null) {
-            if (event.needReply) {
-                p.sendMessage("§e ! §fDigite no chat a resposta do evento.")
-            } else p.sendMessage("§c ! §fSem comandos neste evento.")
-        } else {
-            p.sendMessage("§cNenhum evento está ocorrendo no momento.")
-        }
         if (p.hasPermission("leventos.admin")) {
             p.sendMessage("")
             Text.sendTo(p, Text("§3§l/§a$label", "mostra esse comando", "/$label <evento>"))
@@ -77,6 +81,10 @@ class EventoCommand {
                 p,
                 Text("§3§l/§a$label §ereload", "Recarrega todas as configurações do plugin", "/$label reload")
             )
+        } else {
+            p.sendMessage("§a ! §fPlugin criado por Lucasmellof")
+            p.sendMessage("§a ! §fhttps://github.com/Lucasmellof")
+            p.sendMessage("§a ! §fDiscord: carmello#0760")
         }
     }
 }
