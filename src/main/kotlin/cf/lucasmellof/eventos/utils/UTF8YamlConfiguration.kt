@@ -27,11 +27,4 @@ class Utf8YamlConfiguration : YamlConfiguration() {
         Validate.notNull(file, "File cannot be null")
         this.load(InputStreamReader(FileInputStream(file), Charsets.UTF_8))
     }
-
-    @Deprecated("")
-    @Throws(IOException::class, InvalidConfigurationException::class)
-    override fun load(stream: InputStream?) {
-        Validate.notNull(stream, "Stream cannot be null")
-        this.load(InputStreamReader(stream, Charsets.UTF_8))
-    }
 }

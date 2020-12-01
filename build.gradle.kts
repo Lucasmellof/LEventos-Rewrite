@@ -17,7 +17,7 @@ repositories {
 
 dependencies {
     compileOnly(fileTree(mapOf("dir" to "lib", "include" to listOf("*.jar"))))
-    implementation(kotlin("stdlib", KotlinCompilerVersion.VERSION))
+    compileOnly(kotlin("stdlib", KotlinCompilerVersion.VERSION))
     implementation("com.github.SaiintBrisson.command-framework:bukkit:1.0.0")
     testImplementation(group = "junit", name = "junit", version = "4.12")
 }
