@@ -16,7 +16,6 @@ class HoverEvent : EventComponents {
 
     override val name: String = "hover"
 
-    override val needReply: Boolean = true
     override var started: Long = 0L
 
     override fun onStart() {

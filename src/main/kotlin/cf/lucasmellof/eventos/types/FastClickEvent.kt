@@ -17,7 +17,6 @@ class FastClickEvent : EventComponents {
 
     override val name: String = "fastclick"
 
-    override val needReply: Boolean = false
     override var started: Long = 0L
 
     override fun onStart() {

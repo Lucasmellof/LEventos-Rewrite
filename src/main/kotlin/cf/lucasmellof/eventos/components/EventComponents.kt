@@ -13,7 +13,6 @@ import org.bukkit.event.Listener
  */
 interface EventComponents : Listener {
     val name: String
-    val needReply: Boolean
     var started: Long
     fun onStart()
 
