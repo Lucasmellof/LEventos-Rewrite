@@ -6,6 +6,7 @@ import cf.lucasmellof.eventos.config.ConfigManager
 import cf.lucasmellof.eventos.listeners.PlayerListeners
 import cf.lucasmellof.eventos.types.FastClickEvent
 import cf.lucasmellof.eventos.types.HoverEvent
+import cf.lucasmellof.eventos.types.LotteryEvent
 import cf.lucasmellof.eventos.types.MathEvent
 import cf.lucasmellof.eventos.utils.Vault
 import me.saiintbrisson.bukkit.command.BukkitFrame
@@ -36,6 +37,7 @@ class LEventos : JavaPlugin() {
         registerEvent(FastClickEvent())
         registerEvent(MathEvent())
         registerEvent(HoverEvent())
+        registerEvent(LotteryEvent())
         Bukkit.getPluginManager().registerEvents(PlayerListeners(), this)
         ConfigManager.initialize(this)
         Vault.setupEconomy()
