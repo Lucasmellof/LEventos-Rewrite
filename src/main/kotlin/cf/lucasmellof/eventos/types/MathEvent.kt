@@ -17,20 +17,21 @@ class MathEvent : EventComponents {
 
     override fun onStart() {
         Bukkit.broadcastMessage(" ")
-        Bukkit.broadcastMessage("§6Evento §fmatemática§6 iniciado.")
+        Bukkit.broadcastMessage("§6Evento §fMatemática§6 iniciado.")
         Bukkit.broadcastMessage("§6Digite a resposta para vencer.")
         getResult()
         Bukkit.broadcastMessage(" ")
     }
 
-    override fun onFinish(p: Player) {
-        result = -1
-        finalize(p)
+    override fun onFinish(p: Player, forced: Boolean) {
         Bukkit.broadcastMessage(" ")
-        Bukkit.broadcastMessage("§6Evento §fmatemática§6 concluido.")
+        Bukkit.broadcastMessage("§6Evento §fMatemática§6 concluido.")
         Bukkit.broadcastMessage("§6O resultado é: $result")
-        Bukkit.broadcastMessage("§6O grande vencedor foi: §f" + p.name)
-        showTime()
+        if (!forced) {
+            Bukkit.broadcastMessage("§6O grande vencedor foi: §f" + p.name)
+            finalize(p)
+            showTime()
+        }
         Bukkit.broadcastMessage(" ")
 
     }
@@ -52,7 +53,7 @@ class MathEvent : EventComponents {
         val one = numbers.random()
         val two = numbers.random()
 
-        when ((1..4).random()) {
+        when ((1..3).random()) {
             1 -> {
                 result = one + two
                 Bukkit.broadcastMessage("§6Conta: §f$one §6+ §f$two")
@@ -61,7 +62,7 @@ class MathEvent : EventComponents {
                 result = one - two
                 Bukkit.broadcastMessage("§6Conta: §f$one §6- §f$two")
             }
-            4 -> {
+            3 -> {
                 result = one * two
                 Bukkit.broadcastMessage("§6Conta: §f$one §6* §f$two")
             }

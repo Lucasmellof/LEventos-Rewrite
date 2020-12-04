@@ -15,19 +15,20 @@ class LotteryEvent : EventComponents {
 
     override fun onStart() {
         Bukkit.broadcastMessage(" ")
-        Bukkit.broadcastMessage("§6Evento §floteria§6 foi iniciado.")
-
+        Bukkit.broadcastMessage("§6Evento §fLoteria§6 foi iniciado.")
+        getResult()
         Bukkit.broadcastMessage(" ")
     }
 
-    override fun onFinish(p: Player) {
-        result = -1
-        finalize(p)
+    override fun onFinish(p: Player, forced: Boolean) {
         Bukkit.broadcastMessage(" ")
-        Bukkit.broadcastMessage("§6Evento §floteria§6 foi concluido.")
+        Bukkit.broadcastMessage("§6Evento §fLoteria§6 foi concluido.")
         Bukkit.broadcastMessage("§6O resultado é: $result")
-        Bukkit.broadcastMessage("§6O grande vencedor foi: §f" + p.name)
-        showTime()
+        if (!forced) {
+            finalize(p)
+            Bukkit.broadcastMessage("§6O grande vencedor foi: §f" + p.name)
+            showTime()
+        }
         Bukkit.broadcastMessage(" ")
     }
 
@@ -44,10 +45,7 @@ class LotteryEvent : EventComponents {
     }
 
     fun getResult() {
-        val numbers = (0..500)
-        val one = numbers.random()
-        val two = numbers.random()
-        result = (one..two).random()
-        Bukkit.broadcastMessage("§6Digite um número entre $one e $two .")
+        result = (0..500).random()
+        Bukkit.broadcastMessage("§6Digite um número entre 0 e 500.")
     }
 }

@@ -21,20 +21,23 @@ class HoverEvent : EventComponents {
     override fun onStart() {
         token = loadToken()
         Bukkit.broadcastMessage(" ")
-        Bukkit.broadcastMessage("§6Evento §fescreva mais rapido§6 foi iniciado.")
+        Bukkit.broadcastMessage("§6Evento §fEscreva mais rapido§6 foi iniciado.")
         Bukkit.broadcastMessage("§6Digite a resposta para vencer.")
         Bukkit.getOnlinePlayers().forEach { it.spigot().sendMessage(message()) }
         Bukkit.broadcastMessage(" ")
         started = System.currentTimeMillis()
     }
 
-    override fun onFinish(p: Player) {
+    override fun onFinish(p: Player, forced: Boolean) {
         Bukkit.broadcastMessage(" ")
-        Bukkit.broadcastMessage("§6Evento §fescreva mais rapido§6 ocorrido.")
-        Bukkit.broadcastMessage("§6O grande vencedor foi: §f" + p.name)
-        showTime()
+        Bukkit.broadcastMessage("§6Evento §fEscreva mais rapido§6 ocorrido.")
+        if (!forced) {
+            Bukkit.broadcastMessage("§6O grande vencedor foi: §f" + p.name)
+            showTime()
+            finalize(p)
+        }
         Bukkit.broadcastMessage(" ")
-        finalize(p)
+
     }
 
     override fun onPlayer(p: Player, args: String?): Boolean {
@@ -49,8 +52,8 @@ class HoverEvent : EventComponents {
         cmp.hoverEvent = HoverEvent(HoverEvent.Action.SHOW_TEXT, arrayOf<BaseComponent>(TextComponent(token)))
         return cmp
     }
-
+    var chars = ('a'..'z') + ('A'..'Z') + ('0'..'9')
     private fun loadToken(): String {
-        return (1..7).map { ('a'..'Z').toList().toTypedArray().random() }.joinToString("")
+        return (1..7).map { chars.random() }.joinToString("")
     }
 }
