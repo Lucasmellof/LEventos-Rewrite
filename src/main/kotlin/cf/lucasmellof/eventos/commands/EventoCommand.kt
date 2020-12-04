@@ -6,6 +6,7 @@ import cf.lucasmellof.eventos.utils.Text
 import me.saiintbrisson.minecraft.command.annotation.Command
 import me.saiintbrisson.minecraft.command.command.Context
 import me.saiintbrisson.minecraft.command.target.CommandTarget
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 
@@ -17,8 +18,7 @@ class EventoCommand {
     @Command(
         name = "eventos",
         aliases = ["evento", "ev", "leventos", "event"],
-        target = CommandTarget.PLAYER,
-        permission = "leventos.admin"
+        target = CommandTarget.PLAYER
     )
     fun mainCommand(ctx: Context<Player>) {
         val p = ctx.sender
@@ -68,9 +68,10 @@ class EventoCommand {
     }
 
     @Command(name = "eventos.reload", permission = "leventos.admin")
-    fun reloadCommand(ctx: Context<Player>) {
+    fun reloadCommand(ctx: Context<CommandSender>) {
         ctx.sender.sendMessage("§a§l ! §fRecarregando config.")
-        ConfigManager.reload()
+        ConfigManager.getEverything(true)
+        LEventos.INSTANCE.reScheduleEvent()
     }
 
     @Command(name = "eventos.list", target = CommandTarget.PLAYER, permission = "leventos.admin")

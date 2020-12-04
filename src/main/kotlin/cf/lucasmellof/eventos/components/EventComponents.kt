@@ -22,7 +22,7 @@ interface EventComponents : Listener {
     fun onPlayer(p: Player, args: String?): Boolean
 
     fun finalize(p: Player) {
-
+        givePrize(p)
         LEventos.INSTANCE.runningEvent = null
     }
 
@@ -33,20 +33,22 @@ interface EventComponents : Listener {
     }
 
     fun givePrize(player: Player) {
-        val text = ConfigManager.prizeCommand.replace("%player%", player.name)
-        val replacedText = if (text == "") text else null
-        Bukkit.getPluginManager().callEvent(
-            PlayerWinEvent(
-                player,
-                ConfigManager.prize,
-                replacedText
+        if (ConfigManager.prizeEnabled) {
+            val text = ConfigManager.prizeCommand.replace("%player%", player.name)
+            val replacedText = if (text == "") null else text
+            Bukkit.getPluginManager().callEvent(
+                PlayerWinEvent(
+                    player,
+                    ConfigManager.prize,
+                    replacedText
+                )
             )
-        )
-        if (replacedText != null) Utils.executeConsoleCommand(
-            Bukkit.getConsoleSender(),
-            replacedText,
-            LEventos.INSTANCE
-        )
-        Vault.eco?.depositPlayer(player, ConfigManager.prize)
+            if (replacedText != null) Utils.executeConsoleCommand(
+                Bukkit.getConsoleSender(),
+                replacedText,
+                LEventos.INSTANCE
+            )
+            Vault.eco?.depositPlayer(player, ConfigManager.prize)
+        }
     }
 }
