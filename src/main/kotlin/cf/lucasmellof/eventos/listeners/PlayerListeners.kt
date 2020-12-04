@@ -16,7 +16,7 @@ class PlayerListeners : Listener {
         }
         val evento = LEventos.INSTANCE.runningEvent!!
         if (evento.onPlayer(event.player, event.message)) {
-            evento.onFinish(event.player)
+            evento.onFinish(event.player, false)
             event.isCancelled = true
         }
     }
