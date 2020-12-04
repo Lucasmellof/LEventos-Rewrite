@@ -13,6 +13,7 @@ import me.saiintbrisson.bukkit.command.BukkitFrame
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitRunnable
+import org.bukkit.scheduler.BukkitTask
 
 /* 
  * @author Lucasmellof, Lucas de Mello Freitas created on 05/07/2020
@@ -25,6 +26,7 @@ class LEventos : JavaPlugin() {
     var runningEvent: EventComponents? = null
     lateinit var frame: BukkitFrame
 
+    private lateinit var task: BukkitTask
     val loadedEvents = hashMapOf<String, EventComponents>()
 
     override fun onEnable() {
@@ -41,7 +43,7 @@ class LEventos : JavaPlugin() {
         Bukkit.getPluginManager().registerEvents(PlayerListeners(), this)
         ConfigManager.initialize(this)
         Vault.setupEconomy()
-        //eventScheduler()
+        eventScheduler()
 
     }
 
@@ -51,34 +53,33 @@ class LEventos : JavaPlugin() {
     }
 
     private fun registerEvent(event: EventComponents) {
+        if (ConfigManager.disabledEvents.contains(event.name)) {
+            Bukkit.getConsoleSender()
+                .sendMessage("§e ! §fEvento '${event.name}' encontrado, mas desabilitado na config")
+            return
+        }
         loadedEvents[event.name] = event
+        Bukkit.getConsoleSender().sendMessage("§e ! §fEvento '${event.name}' encontrado e carregado")
     }
 
     private fun eventScheduler() {
-        var event = 0
-        object : BukkitRunnable() {
+        var current = 0
+        val max = loadedEvents.keys.toList()
+        Bukkit.getConsoleSender()
+            .sendMessage("§a ! §fIniciando os eventos automáticos, os eventos vão iniciar a cada ${ConfigManager.autoStartTime}s")
+        task = object : BukkitRunnable() {
             override fun run() {
-                when (event) {
-                    0 -> {
-                        if (runningEvent != null) runningEvent = null
-                        runningEvent = MathEvent()
-                        runningEvent!!.onStart()
-                        event++
-                    }
-                    1 -> {
-                        if (runningEvent != null) runningEvent = null
-                        runningEvent = FastClickEvent()
-                        runningEvent!!.onStart()
-                        event++
-                    }
-                    2 -> {
-                        if (runningEvent != null) runningEvent = null
-                        runningEvent = HoverEvent()
-                        runningEvent!!.onStart()
-                        event = 0
-                    }
-                }
+                if (server.onlinePlayers.isEmpty()) return
+                runningEvent = loadedEvents[max[current]]
+                runningEvent!!.onStart()
+                current++
+                if (current == max.size) current = 0
             }
-        }.runTaskTimer(this, 0, ConfigManager.autoStartTime * 20)
+        }.runTaskTimerAsynchronously(this, 0, ConfigManager.autoStartTime * 20)
+    }
+
+    fun reScheduleEvent() {
+        task.cancel()
+        eventScheduler()
     }
 }
