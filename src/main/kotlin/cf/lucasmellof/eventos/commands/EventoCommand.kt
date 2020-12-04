@@ -50,6 +50,23 @@ class EventoCommand {
         p.sendMessage("§a ! §fVocê iniciou um evento")
     }
 
+    @Command(
+        name = "eventos.stop",
+        aliases = ["fechar", "finalizar"],
+        target = CommandTarget.PLAYER,
+        permission = "leventos.admin"
+    )
+    fun stopCommand(ctx: Context<Player>) {
+        val p = ctx.sender
+        val event = LEventos.INSTANCE.runningEvent
+        if (event == null) {
+            p.sendMessage("§c ! §fNão tem nenhum evento em andamento.")
+            return
+        }
+        event.onFinish(p, true)
+        p.sendMessage("§a ! §fVocê finalizou o evento")
+    }
+
     @Command(name = "eventos.reload", permission = "leventos.admin")
     fun reloadCommand(ctx: Context<Player>) {
         ctx.sender.sendMessage("§a§l ! §fRecarregando config.")
@@ -76,6 +93,7 @@ class EventoCommand {
             p.sendMessage("")
             Text.sendTo(p, Text("§3§l/§a$label", "mostra esse comando", "/$label <evento>"))
             Text.sendTo(p, Text("§3§l/§a$label §estart §d<nome do evento>", "Inicia um evento", "/$label start "))
+            Text.sendTo(p, Text("§3§l/§a$label §estop", "Finaliza o evento em andamento", "/$label stop"))
             Text.sendTo(p, Text("§3§l/§a$label §elist", "Mostra os eventos disponíveis", "/$label list"))
             Text.sendTo(
                 p,
