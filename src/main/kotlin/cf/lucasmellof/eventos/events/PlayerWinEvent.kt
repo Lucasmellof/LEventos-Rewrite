@@ -7,7 +7,7 @@ import org.bukkit.event.player.PlayerEvent
 /* 
  * @author Lucasmellof, Lucas de Mello Freitas created on 05/07/2020
  */
-class PlayerWinEvent(who: Player, val prize: Double) : PlayerEvent(who) {
+class PlayerWinEvent(who: Player, val prize: Double?, val prizeCommand: String?) : PlayerEvent(who) {
 
     private val handlerList = HandlerList()
 
