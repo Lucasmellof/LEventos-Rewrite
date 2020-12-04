@@ -21,13 +21,9 @@ object ConfigManager {
     fun initialize(instance: Plugin) {
         config = ConfigAPI(instance, "config.yml", true, header = true)
 
-        config.theFile.writer().appendln("CASO NÃO QUEIRA HABILITAR O DINHEIRO DEIXE COMO 0.0")
         prize = config.getOrSetDefaultValue("prize.money", 0.0)
-        config.theFile.writer().appendln("CASO NÃO QUEIRA HABILITAR O COMANDO DEIXE COMO ''")
         prizeCommand = config.getOrSetDefaultValue("prize.command", "")
         prizeEnabled = config.getOrSetDefaultValue("prize.enabled", false)
-        config.theFile.writer()
-            .appendln("PARA PEGAR O NOME DOS EVENTOS USE /EVENTOS LIST E COLOQUE EM LETRAS MINÚSCULAS")
 
         disabledEvents = config.getOrSetDefaultValue("disabledEvents", listOf())
 
