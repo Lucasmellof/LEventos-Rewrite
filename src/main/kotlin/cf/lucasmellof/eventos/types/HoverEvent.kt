@@ -30,7 +30,7 @@ class HoverEvent : EventComponents {
 
     override fun onFinish(p: Player, forced: Boolean) {
         Bukkit.broadcastMessage(" ")
-        Bukkit.broadcastMessage("§6Evento §fEscreva mais rapido§6 ocorrido.")
+        Bukkit.broadcastMessage("§6Evento §fEscreva mais rapido§6 foi encerrado.")
         if (!forced) {
             Bukkit.broadcastMessage("§6O grande vencedor foi: §f" + p.name)
             showTime()
