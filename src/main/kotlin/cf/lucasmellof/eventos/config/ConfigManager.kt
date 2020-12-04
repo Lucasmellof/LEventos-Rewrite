@@ -20,20 +20,19 @@ object ConfigManager {
 
     fun initialize(instance: Plugin) {
         config = ConfigAPI(instance, "config.yml", true, header = true)
-
-        prize = config.getOrSetDefaultValue("prize.money", 0.0)
-        prizeCommand = config.getOrSetDefaultValue("prize.command", "")
-        prizeEnabled = config.getOrSetDefaultValue("prize.enabled", false)
-
-        disabledEvents = config.getOrSetDefaultValue("disabledEvents", listOf())
-
-        autoStartTime = config.getOrSetDefaultValue("autostart.time", 12000L)
-        autoStartEnabled = config.getOrSetDefaultValue("autostart.enabled", false)
-
+        getEverything(false)
         config.save()
     }
 
-    fun reload() {
-        config.reload()
+    fun getEverything(reload: Boolean) {
+        if (reload) config.reload()
+        prize = config.getDouble("prize.money", 0.0)
+        prizeCommand = config.getString("prize.command", "")
+        prizeEnabled = config.getBoolean("prize.enabled", false)
+
+        disabledEvents = config.getStringList("disabledEvents", listOf())
+
+        autoStartTime = config.getLong("autostart.time", 12000L)
+        autoStartEnabled = config.getBoolean("autostart.enabled", false)
     }
 }
