@@ -36,7 +36,6 @@ class LotteryEvent : EventComponents {
         val sum = args!!.toIntOrNull()
         if (result == -1 && sum == null) return false
         return if (sum != result) {
-            p.sendMessage("§cResultado errado, tente novamente.")
             false
         } else {
             p.sendMessage("§eVocê acertou, parabéns!")
