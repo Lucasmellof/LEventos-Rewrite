@@ -3,6 +3,7 @@ package cf.lucasmellof.eventos.components
 import cf.lucasmellof.eventos.LEventos
 import cf.lucasmellof.eventos.config.ConfigManager
 import cf.lucasmellof.eventos.events.PlayerWinEvent
+import cf.lucasmellof.eventos.utils.Utils
 import cf.lucasmellof.eventos.utils.Vault
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -16,18 +17,12 @@ interface EventComponents : Listener {
     var started: Long
     fun onStart()
 
-    fun onFinish(p: Player)
+    fun onFinish(p: Player, forced: Boolean)
 
     fun onPlayer(p: Player, args: String?): Boolean
 
     fun finalize(p: Player) {
-        Bukkit.getPluginManager().callEvent(
-            PlayerWinEvent(
-                p,
-                ConfigManager.prize
-            )
-        )
-        Vault.eco?.depositPlayer(p, ConfigManager.prize)
+
         LEventos.INSTANCE.runningEvent = null
     }
 
@@ -35,5 +30,23 @@ interface EventComponents : Listener {
         val current = System.currentTimeMillis() - started
 
         Bukkit.broadcastMessage("§6Demorou: §b${current / 1000.0}§fs")
+    }
+
+    fun givePrize(player: Player) {
+        val text = ConfigManager.prizeCommand.replace("%player%", player.name)
+        val replacedText = if (text == "") text else null
+        Bukkit.getPluginManager().callEvent(
+            PlayerWinEvent(
+                player,
+                ConfigManager.prize,
+                replacedText
+            )
+        )
+        if (replacedText != null) Utils.executeConsoleCommand(
+            Bukkit.getConsoleSender(),
+            replacedText,
+            LEventos.INSTANCE
+        )
+        Vault.eco?.depositPlayer(player, ConfigManager.prize)
     }
 }
