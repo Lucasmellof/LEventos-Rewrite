@@ -16,29 +16,17 @@ class FastClickEvent : EventComponents {
     var token = ""
 
     override val name: String = "fastclick"
-
+    override val fancyName: String = "Clique mais rápido"
     override var started: Long = 0L
 
-    override fun onStart() {
-        started = System.currentTimeMillis()
+    override fun getAction() {
         token = loadToken()
-        Bukkit.broadcastMessage(" ")
-        Bukkit.broadcastMessage("§6Evento §fClique mais rapido§6 foi iniciado.")
-        Bukkit.broadcastMessage("§6Clique no botão para vencer.")
         Bukkit.getOnlinePlayers().forEach { it.spigot().sendMessage(click()) }
-        Bukkit.broadcastMessage(" ")
-        started = System.currentTimeMillis()
+        Bukkit.broadcastMessage("§6Clique no botão para vencer.")
     }
 
-    override fun onFinish(p: Player, forced: Boolean) {
-        Bukkit.broadcastMessage(" ")
-        Bukkit.broadcastMessage("§6Evento §fClique mais rapido§6 foi encerrado.")
-        if (!forced) {
-            Bukkit.broadcastMessage("§6O grande vencedor foi: §f" + p.name)
-            finalize(p)
-            showTime()
-        }
-        Bukkit.broadcastMessage(" ")
+    override fun showAnswer() {
+
     }
 
     override fun onPlayer(p: Player, args: String?): Boolean {

@@ -3,37 +3,23 @@ package cf.lucasmellof.eventos.types
 import cf.lucasmellof.eventos.components.EventComponents
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import java.util.*
 
 /* 
  * @author Lucasmellof, Lucas de Mello Freitas created on 05/07/2020
  */
 class MathEvent : EventComponents {
     private var result = 0
-    private val random = Random()
     override val name: String = "math"
+    override val fancyName: String = "Matemática"
 
     override var started: Long = 0L
 
-    override fun onStart() {
-        Bukkit.broadcastMessage(" ")
-        Bukkit.broadcastMessage("§6Evento §fMatemática§6 iniciado.")
-        Bukkit.broadcastMessage("§6Digite a resposta para vencer.")
+    override fun getAction() {
         getResult()
-        Bukkit.broadcastMessage(" ")
     }
 
-    override fun onFinish(p: Player, forced: Boolean) {
-        Bukkit.broadcastMessage(" ")
-        Bukkit.broadcastMessage("§6Evento §fMatemática§6 concluido.")
+    override fun showAnswer() {
         Bukkit.broadcastMessage("§6O resultado é: $result")
-        if (!forced) {
-            Bukkit.broadcastMessage("§6O grande vencedor foi: §f" + p.name)
-            finalize(p)
-            showTime()
-        }
-        Bukkit.broadcastMessage(" ")
-
     }
 
     override fun onPlayer(p: Player, args: String?): Boolean {
@@ -47,7 +33,7 @@ class MathEvent : EventComponents {
         }
     }
 
-    fun getResult() {
+    private fun getResult() {
         val numbers = (0..40391)
         val one = numbers.random()
         val two = numbers.random()

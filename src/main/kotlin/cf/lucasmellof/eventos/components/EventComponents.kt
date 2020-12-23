@@ -14,10 +14,31 @@ import org.bukkit.event.Listener
  */
 interface EventComponents : Listener {
     val name: String
+    val fancyName: String
     var started: Long
-    fun onStart()
+    fun onStart() {
+        Bukkit.broadcastMessage(" ")
+        Bukkit.broadcastMessage("§6Evento §f${fancyName}§6 foi iniciado.")
+        getAction()
+        Bukkit.broadcastMessage(" ")
+        started = System.currentTimeMillis()
+    }
 
-    fun onFinish(p: Player, forced: Boolean)
+    fun getAction()
+
+    fun onFinish(p: Player, forced: Boolean) {
+        Bukkit.broadcastMessage(" ")
+        Bukkit.broadcastMessage("§6Evento §f${fancyName}§6 foi encerrado.")
+        showAnswer()
+        if (!forced) {
+            Bukkit.broadcastMessage("§6O grande vencedor foi: §f" + p.name)
+            finalize(p)
+            showTime()
+        }
+        Bukkit.broadcastMessage(" ")
+    }
+
+    fun showAnswer()
 
     fun onPlayer(p: Player, args: String?): Boolean
 
@@ -29,7 +50,7 @@ interface EventComponents : Listener {
     fun showTime() {
         val current = System.currentTimeMillis() - started
 
-        Bukkit.broadcastMessage("§6Demorou: §b${current / 1000.0}§fs")
+        Bukkit.broadcastMessage("§6Demorou: §b${Utils.getFancyTime(current)}")
     }
 
     fun givePrize(player: Player) {

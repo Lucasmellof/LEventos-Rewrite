@@ -9,27 +9,17 @@ import org.bukkit.entity.Player
  */
 class LotteryEvent : EventComponents {
     override val name: String = "loteria"
+    override val fancyName: String = "Loteria"
     override var started: Long = 0L
 
     var result = 0
 
-    override fun onStart() {
-        Bukkit.broadcastMessage(" ")
-        Bukkit.broadcastMessage("§6Evento §fLoteria§6 foi iniciado.")
+    override fun getAction() {
         getResult()
-        Bukkit.broadcastMessage(" ")
     }
 
-    override fun onFinish(p: Player, forced: Boolean) {
-        Bukkit.broadcastMessage(" ")
-        Bukkit.broadcastMessage("§6Evento §fLoteria§6 foi concluido.")
+    override fun showAnswer() {
         Bukkit.broadcastMessage("§6O resultado é: $result")
-        if (!forced) {
-            finalize(p)
-            Bukkit.broadcastMessage("§6O grande vencedor foi: §f" + p.name)
-            showTime()
-        }
-        Bukkit.broadcastMessage(" ")
     }
 
     override fun onPlayer(p: Player, args: String?): Boolean {
@@ -44,7 +34,7 @@ class LotteryEvent : EventComponents {
     }
 
     fun getResult() {
-        result = (0..500).random()
-        Bukkit.broadcastMessage("§6Digite um número entre 0 e 500.")
+        result = (0..100).random()
+        Bukkit.broadcastMessage("§6Digite um número entre 0 e 100.")
     }
 }

@@ -16,29 +16,18 @@ class HoverEvent : EventComponents {
 
     override val name: String = "hover"
 
+    override val fancyName: String = "Escreva mais rapido"
     override var started: Long = 0L
 
-    override fun onStart() {
+    override fun getAction() {
         token = loadToken()
-        Bukkit.broadcastMessage(" ")
-        Bukkit.broadcastMessage("§6Evento §fEscreva mais rapido§6 foi iniciado.")
-        Bukkit.broadcastMessage("§6Digite a resposta para vencer.")
         Bukkit.getOnlinePlayers().forEach { it.spigot().sendMessage(message()) }
-        Bukkit.broadcastMessage(" ")
-        started = System.currentTimeMillis()
+        Bukkit.broadcastMessage("§6Digite a resposta para vencer.")
     }
 
-    override fun onFinish(p: Player, forced: Boolean) {
-        Bukkit.broadcastMessage(" ")
-        Bukkit.broadcastMessage("§6Evento §fEscreva mais rapido§6 foi encerrado.")
-        if (!forced) {
-            Bukkit.broadcastMessage("§6O grande vencedor foi: §f" + p.name)
-            showTime()
-            finalize(p)
-        }
-        Bukkit.broadcastMessage(" ")
-
+    override fun showAnswer() {
     }
+
 
     override fun onPlayer(p: Player, args: String?): Boolean {
         return token == args
@@ -52,6 +41,7 @@ class HoverEvent : EventComponents {
         cmp.hoverEvent = HoverEvent(HoverEvent.Action.SHOW_TEXT, arrayOf<BaseComponent>(TextComponent(token)))
         return cmp
     }
+
     var chars = ('a'..'z') + ('A'..'Z') + ('0'..'9')
     private fun loadToken(): String {
         return (1..7).map { chars.random() }.joinToString("")
